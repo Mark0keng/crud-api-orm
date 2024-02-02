@@ -1,5 +1,4 @@
 const db = require("../models");
-const lecturer = require("../models/lecturer");
 
 const getAllStudent = async () => {
   const result = await db.Student.findAll();
@@ -17,10 +16,11 @@ const getStudentById = async (id) => {
   return Promise.resolve(result);
 };
 
-const createStudent = async (name, major) => {
+const createStudent = async (name, major, user_id) => {
   await db.Student.create({
     name: name,
     major: major,
+    user_id: user_id,
   });
 };
 

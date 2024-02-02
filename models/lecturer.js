@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   Lecturer.init(
     {
       name: DataTypes.STRING,
+      user_id: DataTypes.INTEGER,
     },
     {
       sequelize,

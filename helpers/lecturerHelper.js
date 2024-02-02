@@ -16,9 +16,10 @@ const getAllLecturer = async () => {
   return Promise.resolve(result);
 };
 
-const createLecturer = async (name) => {
+const createLecturer = async (name, user_id) => {
   await db.Lecturer.create({
     name: name,
+    user_id: user_id,
   });
 };
 

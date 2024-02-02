@@ -9,12 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // StudentCourse.belongsTo(models.Student, {
-      //   foreignKey: "student_id",
-      //   as: "student",
+      // foreignKey: "student_id",
+      // as: "student",
       // });
       // StudentCourse.belongsTo(models.Course, {
-      //   foreignKey: "course_id",
-      //   as: "course",
+      // foreignKey: "course_id",
+      // as: "course",
       // });
     }
   }
