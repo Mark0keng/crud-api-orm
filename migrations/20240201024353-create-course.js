@@ -12,9 +12,23 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      subject: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      room: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      code: {
+        type: Sequelize.STRING,
+      },
       lecturer_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
       },
       createdAt: {
         allowNull: false,

@@ -10,6 +10,16 @@ const getLecturerById = async (id) => {
   return Promise.resolve(result);
 };
 
+const getLecturerByUserId = async (user_id) => {
+  const result = await db.Lecturer.findOne({
+    where: {
+      user_id,
+    },
+  });
+
+  return Promise.resolve(result);
+};
+
 const getAllLecturer = async () => {
   const result = await db.Lecturer.findAll();
 
@@ -43,12 +53,25 @@ const deleteLecturer = async (id) => {
 };
 
 // One-to-many case
-const getLecturerCourse = async (id) => {
-  const result = await db.Lecturer.findAll({
+const getLecturerCourse = async (user_id) => {
+  const result = await db.Lecturer.findOne({
     where: {
-      id,
+      user_id,
     },
-    include: "course",
+    include: [
+      {
+        model: db.Course,
+        as: "course",
+        attributes: [
+          "id",
+          "name",
+          "subject",
+          "room",
+          "description",
+          "lecturer_id",
+        ],
+      },
+    ],
   });
 
   return Promise.resolve(result);
@@ -56,6 +79,7 @@ const getLecturerCourse = async (id) => {
 
 module.exports = {
   getLecturerById,
+  getLecturerByUserId,
   getAllLecturer,
   getLecturerCourse,
   createLecturer,

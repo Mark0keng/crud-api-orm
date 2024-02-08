@@ -68,6 +68,7 @@ const login = async (dataObject) => {
     const user = await db.User.findOne({
       where: { email },
     });
+
     if (_.isEmpty(user)) {
       return Promise.reject(Boom.notFound("USER_NOT_FOUND"));
     }
@@ -77,15 +78,29 @@ const login = async (dataObject) => {
       return Promise.reject(Boom.badRequest("WRONG_CREDENTIALS"));
     }
 
+    let userInfo = null;
+
+    if (user.role === 1) {
+      userInfo = await StudentHelper.getStudentByUserId(user.id);
+    }
+
+    if (user.role === 2) {
+      userInfo = await LecturerHelper.getLecturerByUserId(user.id);
+    }
+
     const token = __generateToken({
       id: user.id,
-      name: user.username,
+      username: user.username,
+      name: userInfo.name,
       email: user.email,
       role: user.role,
+      ...(user.role === 1 && { student_id: userInfo.id }),
+      ...(user.role === 2 && { lecturer_id: userInfo.id }),
     });
 
     return Promise.resolve({ token });
   } catch (err) {
+    console.log(err);
     return Promise.reject(GeneralHelper.errorResponse(err));
   }
 };

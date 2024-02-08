@@ -21,7 +21,9 @@ const register = async (request, reply) => {
 
     return reply.send(response);
   } catch (err) {
-    return reply.send(GeneralHelper.errorResponse(err));
+    return reply
+      .status(GeneralHelper.statusResponse(err))
+      .send(GeneralHelper.errorResponse(err));
   }
 };
 
@@ -34,7 +36,9 @@ const login = async (request, reply) => {
 
     return reply.send(response);
   } catch (err) {
-    return reply.send(GeneralHelper.errorResponse(err));
+    return reply
+      .status(GeneralHelper.statusResponse(err))
+      .send(GeneralHelper.errorResponse(err));
   }
 };
 

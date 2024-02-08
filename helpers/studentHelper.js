@@ -16,6 +16,16 @@ const getStudentById = async (id) => {
   return Promise.resolve(result);
 };
 
+const getStudentByUserId = async (user_id) => {
+  const result = await db.Student.findOne({
+    where: {
+      user_id,
+    },
+  });
+
+  return Promise.resolve(result);
+};
+
 const createStudent = async (name, major, user_id) => {
   await db.Student.create({
     name: name,
@@ -44,7 +54,8 @@ const deleteStudent = async (id) => {
 };
 
 const getStudentCourse = async (id) => {
-  const result = await db.Student.findByPk(id, {
+  const result = await db.Student.findOne({
+    where: { user_id: id },
     include: [
       {
         model: db.Course,
@@ -52,10 +63,12 @@ const getStudentCourse = async (id) => {
         attributes: ["name"],
         through: {
           attributes: [],
-        },
+        }, 
       },
     ],
   });
+
+  console.log(result);
 
   return Promise.resolve(result);
 };
@@ -63,6 +76,7 @@ const getStudentCourse = async (id) => {
 module.exports = {
   getAllStudent,
   getStudentById,
+  getStudentByUserId,
   getStudentCourse,
   createStudent,
   updateStudent,

@@ -20,14 +20,18 @@ const getAllCourse = async (req, res) => {
 
 const createCourse = async (req, res) => {
   try {
+    req.body.code = await CourseHelper.generateCourseCode(7);
+    console.log(req.body.code);
     Validation.courseValidation(req.body);
 
-    await CourseHelper.createCourse(req.body.name, req.body.lecturer_id);
+    await CourseHelper.createCourse(req.body);
 
     return res.status(200).json({ message: "Course successfully created!" });
   } catch (error) {
     console.log(error);
-    return res.send(GeneralHelper.errorResponse(error));
+    return res
+      .status(GeneralHelper.statusResponse(error))
+      .send(GeneralHelper.errorResponse(error));
   }
 };
 
