@@ -54,24 +54,19 @@ const deleteLecturer = async (id) => {
 
 // One-to-many case
 const getLecturerCourse = async (user_id) => {
-  const result = await db.Lecturer.findOne({
-    where: {
-      user_id,
-    },
+  const result = await db.Course.findAll({
     include: [
       {
-        model: db.Course,
-        as: "course",
+        model: db.Lecturer,
+        as: "lecturer",
         attributes: [
-          "id",
           "name",
-          "subject",
-          "room",
-          "description",
-          "lecturer_id",
         ],
       },
     ],
+    where: {
+      lecturer_id: user_id
+    }
   });
 
   return Promise.resolve(result);

@@ -54,17 +54,25 @@ const deleteStudent = async (id) => {
 };
 
 const getStudentCourse = async (id) => {
-  const result = await db.Student.findOne({
-    where: { user_id: id },
+  const result = await db.Course.findAll({
+    // where: { student_id: id },
     include: [
       {
-        model: db.Course,
-        as: "courses",
-        attributes: ["name"],
+        model: db.Student,
+        as: "students",
+        attributes: ["name", "major",],
         through: {
           attributes: [],
-        }, 
+          where:{
+            student_id: id
+          }
+        },
       },
+      {
+        model: db.Lecturer,
+        as: 'lecturer',
+        attributes: ["name"]
+      }
     ],
   });
 

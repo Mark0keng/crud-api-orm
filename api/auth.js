@@ -44,7 +44,7 @@ const login = async (request, reply) => {
 
 const getProfile = async (request, reply) => {
   try {
-    const { verifiedUser } = request.body;
+    const { verifiedUser } = request.user;
     const response = await AuthHelper.getProfile(verifiedUser.email);
 
     return reply
@@ -59,7 +59,8 @@ const changePassword = async (request, reply) => {
   try {
     Validation.changePasswordValidation(request.body);
 
-    const { verifiedUser, oldPassword, newPassword } = request.body;
+    const { oldPassword, newPassword } = request.body;
+    const { verifiedUser } = request.user;
     const response = await AuthHelper.changePassword(
       verifiedUser.email,
       oldPassword,
