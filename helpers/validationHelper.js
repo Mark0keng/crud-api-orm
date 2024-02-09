@@ -118,6 +118,31 @@ const forgotPasswordValidation = (data) => {
   }
 };
 
+const AssignmentValidation = (data) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    instruction: Joi.string().allow(""),
+    dueDate: Joi.date().required(),
+    course_id: Joi.number().required(),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
+const StudentAssignmentValidation = (data) => {
+  const schema = Joi.object({
+    student_id: Joi.number().required(),
+    assignment_id: Joi.number().required(),
+    fileSubmit: Joi.string().optional(),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
 module.exports = {
   studentValidation,
   lecturerValidation,
@@ -129,4 +154,6 @@ module.exports = {
   changePasswordValidation,
   urlForgotPasswordValidation,
   forgotPasswordValidation,
+  AssignmentValidation,
+  StudentAssignmentValidation,
 };

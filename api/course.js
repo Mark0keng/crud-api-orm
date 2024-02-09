@@ -5,6 +5,18 @@ const Validation = require("../helpers/validationHelper");
 const CourseHelper = require("../helpers/courseHelper");
 const LecturerHelper = require("../helpers/lecturerHelper");
 
+const getCourseByCode = async (req, res) => {
+  try {
+    const response = await CourseHelper.getCourseByCode(req.params.code);
+
+    return res
+      .status(200)
+      .json({ message: "successfully get data!", data: response });
+  } catch (error) {
+    return res.send(GeneralHelper.errorResponse(error));
+  }
+};
+
 const getAllCourse = async (req, res) => {
   try {
     const response = await CourseHelper.getAllCourse();
@@ -13,7 +25,6 @@ const getAllCourse = async (req, res) => {
       .status(200)
       .json({ message: "successfully get data!", data: response });
   } catch (error) {
-    console.log(error);
     return res.send(GeneralHelper.errorResponse(error));
   }
 };
@@ -21,14 +32,13 @@ const getAllCourse = async (req, res) => {
 const createCourse = async (req, res) => {
   try {
     req.body.code = await CourseHelper.generateCourseCode(7);
-    console.log(req.body.code);
+
     Validation.courseValidation(req.body);
 
     await CourseHelper.createCourse(req.body);
 
     return res.status(200).json({ message: "Course successfully created!" });
   } catch (error) {
-    console.log(error);
     return res
       .status(GeneralHelper.statusResponse(error))
       .send(GeneralHelper.errorResponse(error));
@@ -91,11 +101,11 @@ const getCourseMember = async (req, res) => {
       .status(200)
       .json({ message: "successfully get data!", data: response });
   } catch (error) {
-    console.log(error);
     return res.send(GeneralHelper.errorResponse(error));
   }
 };
 
+Router.get("/:code", getCourseByCode);
 Router.get("/", getAllCourse);
 Router.get("/:id/get-member", getCourseMember);
 Router.post("/create", createCourse);

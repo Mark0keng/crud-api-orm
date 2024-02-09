@@ -1,5 +1,6 @@
+const Boom = require("boom");
 const db = require("../models");
-const lecturer = require("../models/lecturer");
+const _ = require("lodash");
 
 const generateCourseCode = async (length) => {
   const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -20,15 +21,23 @@ const getCourseById = async (id) => {
     },
   });
 
+  if (_.isEmpty(result)) {
+    return Promise.reject(Boom.notFound("Course Not Found"));
+  }
+
   return Promise.resolve(result);
 };
 
 const getCourseByCode = async (code) => {
-  const result = await db.Course.findAll({
+  const result = await db.Course.findOne({
     where: {
       code,
     },
   });
+
+  if (_.isEmpty(result)) {
+    return Promise.reject(Boom.notFound("Course Not Found"));
+  }
 
   return Promise.resolve(result);
 };
@@ -40,7 +49,6 @@ const getAllCourse = async () => {
 };
 
 const createCourse = async (course) => {
-  console.log(course);
   await db.Course.create({
     name: course.name,
     subject: course.subject,
