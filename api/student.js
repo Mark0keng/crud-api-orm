@@ -103,9 +103,7 @@ const assignStudentToCourse = async (req, res) => {
 // Many-to-many case
 const getStudentCourse = async (req, res) => {
   try {
-    const studentExist = await StudentHelper.getStudentByUserId(req.params.id);
-    if (studentExist.length === 0)
-      return res.status(404).json({ message: "Student not found!" });
+    const student = await StudentHelper.getStudentById(req.params.id);
 
     const response = await StudentHelper.getStudentCourse(req.params.id);
 
@@ -113,7 +111,10 @@ const getStudentCourse = async (req, res) => {
       .status(200)
       .json({ message: "successfully get data!", data: response });
   } catch (error) {
-    return res.send(GeneralHelper.errorResponse(error));
+    console.log(error);
+    return res
+      .status(GeneralHelper.statusResponse(error))
+      .send(GeneralHelper.errorResponse(error));
   }
 };
 

@@ -15,7 +15,7 @@ const generateCourseCode = async (length) => {
 };
 
 const getCourseById = async (id) => {
-  const result = await db.Course.findAll({
+  const result = await db.Course.findOne({
     where: {
       id,
     },
@@ -25,7 +25,7 @@ const getCourseById = async (id) => {
     return Promise.reject(Boom.notFound("Course Not Found"));
   }
 
-  return Promise.resolve(result);
+  return Promise.resolve(result.dataValues);
 };
 
 const getCourseByCode = async (code) => {
@@ -39,7 +39,7 @@ const getCourseByCode = async (code) => {
     return Promise.reject(Boom.notFound("Course Not Found"));
   }
 
-  return Promise.resolve(result);
+  return Promise.resolve(result.dataValues);
 };
 
 const getAllCourse = async () => {
@@ -82,15 +82,24 @@ const getCourseMember = async (id) => {
   const result = await db.Course.findByPk(id, {
     include: [
       {
+        model: db.Lecturer,
+        as: "lecturer",
+        attributes: ["name"],
+      },
+      {
         model: db.Student,
         as: "students",
-        attributes: ["name", "major"],
+        attributes: ["id", "name", "major"],
         through: {
           attributes: [],
         },
       },
     ],
   });
+
+  if (_.isEmpty(result)) {
+    return Promise.reject(Boom.notFound("Course Not Found"));
+  }
 
   return Promise.resolve(result);
 };

@@ -1,3 +1,5 @@
+const Boom = require("boom");
+const _ = require("lodash");
 const db = require("../models");
 
 const getAllStudent = async () => {
@@ -7,13 +9,17 @@ const getAllStudent = async () => {
 };
 
 const getStudentById = async (id) => {
-  const result = await db.Student.findAll({
+  const result = await db.Student.findOne({
     where: {
       id,
     },
   });
 
-  return Promise.resolve(result);
+  if (_.isEmpty(result)) {
+    return Promise.reject(Boom.notFound("Student Not Found"));
+  }
+
+  return Promise.resolve(result.dataValues);
 };
 
 const getStudentByUserId = async (user_id) => {
@@ -23,7 +29,7 @@ const getStudentByUserId = async (user_id) => {
     },
   });
 
-  return Promise.resolve(result);
+  return Promise.resolve(result.dataValues);
 };
 
 const createStudent = async (name, major, user_id) => {
@@ -54,25 +60,23 @@ const deleteStudent = async (id) => {
 };
 
 const getStudentCourse = async (id) => {
+  // console.log(id, "<<<hello");
   const result = await db.Course.findAll({
-    // where: { student_id: id },
     include: [
       {
         model: db.Student,
         as: "students",
-        attributes: ["name", "major",],
+        where: { id },
+        attributes: ["name", "major"],
         through: {
           attributes: [],
-          where:{
-            student_id: id
-          }
         },
       },
       {
         model: db.Lecturer,
-        as: 'lecturer',
-        attributes: ["name"]
-      }
+        as: "lecturer",
+        attributes: ["name"],
+      },
     ],
   });
 

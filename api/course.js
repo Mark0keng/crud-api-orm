@@ -101,6 +101,7 @@ const getCourseMember = async (req, res) => {
       .status(200)
       .json({ message: "successfully get data!", data: response });
   } catch (error) {
+    console.log(error);
     return res.send(GeneralHelper.errorResponse(error));
   }
 };

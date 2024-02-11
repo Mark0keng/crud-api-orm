@@ -10,26 +10,14 @@ const StudentCourseHelper = require("../helpers/studentCourseHelper");
 const joinCourse = async (req, res) => {
   try {
     Validation.joinCourseValidation(req.body);
-      
+
     const student = await StudentHelper.getStudentById(req.body.student_id);
-    if (student.length === 0)
-      return res.status(404).json({ message: "Student not found!" });
 
     const course = await CourseHelper.getCourseByCode(req.body.code);
-    if (course.length === 0)
-      return res.status(404).json({ message: "Course not found!" });
 
-    const studentAlreadyMember = await StudentCourseHelper.studentAlreadyMember(
-      student[0].dataValues.id,
-      course[0].dataValues.id
-    );
-    if (studentAlreadyMember.length > 0)
-      return res.status(400).json({ message: "Already member in this course" });
+    await StudentCourseHelper.studentAlreadyMember(student.id, course.id);
 
-    await StudentCourseHelper.assignStudentToCourse(
-      student[0].dataValues.id,
-      course[0].dataValues.id
-    );
+    await StudentCourseHelper.assignStudentToCourse(student.id, course.id);
 
     return res
       .status(200)

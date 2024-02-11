@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       instruction: DataTypes.TEXT,
-      submitFile: DataTypes.STRING,
       dueDate: DataTypes.DATE,
       course_id: DataTypes.NUMBER,
     },

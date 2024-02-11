@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   StudentAssignment.init(
     {
       student_id: DataTypes.INTEGER,
-      course_id: DataTypes.INTEGER,
+      assignment_id: DataTypes.INTEGER,
       fileSubmit: DataTypes.STRING,
     },
     {
