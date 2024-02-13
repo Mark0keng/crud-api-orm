@@ -9,6 +9,24 @@ const {
 } = require("../utils/cloudinary");
 const uploadMedia = require("../middlewares/uploadMedia");
 
+const getStudentAssignment = async (req, res) => {
+  try {
+    const response = await StudentAssignmentHelper.getStudentAssignment(
+      req.params.studentId,
+      req.params.assignmentId
+    );
+
+    return res
+      .status(200)
+      .json({ message: "successfully get data!", data: response });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(GeneralHelper.statusResponse(error))
+      .send(GeneralHelper.errorResponse(error));
+  }
+};
+
 const studentAssignmentCreate = async (req, res) => {
   try {
     Validation.StudentAssignmentValidation(req.body);
@@ -17,7 +35,6 @@ const studentAssignmentCreate = async (req, res) => {
 
     return res.status(200).json({ message: "successfully created!" });
   } catch (error) {
-    console.log(error);
     return res
       .status(GeneralHelper.statusResponse(error))
       .send(GeneralHelper.errorResponse(error));
@@ -31,26 +48,26 @@ const submitStudentAssignment = async (req, res) => {
     if (req?.fileValidationError)
       return res.status(400).json({ message: req.fileValidationError.message });
 
-    if (!req?.files?.imageUrl)
+    if (!req?.files?.fileSubmit)
       return res.status(400).json({ message: "File is required" });
 
     Validation.StudentAssignmentValidation(req.body);
 
-    fileResult = await uploadToCloudinary(req.files.imageUrl[0], "image");
+    fileResult = await uploadToCloudinary(req.files.fileSubmit[0], "auto");
 
-    if (!imageResult?.url)
-      return res.status(500).json({ message: imageResult.error });
+    if (!fileResult?.url)
+      return res.status(500).json({ message: fileSubmit.error });
 
     await StudentAssignmentHelper.updateStudentAssignment({
       ...req.body,
-      fileSubmit: fileResult,
+      fileSubmit: fileResult.url,
     });
 
     return res.status(200).json({ message: "successfully created!" });
   } catch (error) {
     console.log(error);
-    if (imageResult?.public_id) {
-      await cloudinaryDeleteImg(imageResult.public_id, "image");
+    if (fileResult?.public_id) {
+      await cloudinaryDeleteImg(fileResult.public_id, "image");
     }
 
     return res
@@ -59,10 +76,14 @@ const submitStudentAssignment = async (req, res) => {
   }
 };
 
+Router.get(
+  "/student/:studentId/assignment/:assignmentId",
+  getStudentAssignment
+);
 Router.post("/create", studentAssignmentCreate);
-Router.post(
+Router.put(
   "/submit",
-  uploadMedia.fields([{ name: "imageUrl", maxCount: 1 }]),
+  uploadMedia.fields([{ name: "fileSubmit", maxCount: 1 }]),
   submitStudentAssignment
 );
 

@@ -13,7 +13,9 @@ const getCourseByCode = async (req, res) => {
       .status(200)
       .json({ message: "successfully get data!", data: response });
   } catch (error) {
-    return res.send(GeneralHelper.errorResponse(error));
+    return res
+      .status(GeneralHelper.statusResponse(error))
+      .send(GeneralHelper.errorResponse(error));
   }
 };
 
