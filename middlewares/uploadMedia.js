@@ -1,16 +1,16 @@
 const multer = require("multer");
 const DIR = "./public";
 
-// const storage = multer.memoryStorage();
+const storage = multer.memoryStorage();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, DIR);
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, DIR);
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, file.originalname);
+//   },
+// });
 
 const fileFilter = (req, file, cb) => {
   if (

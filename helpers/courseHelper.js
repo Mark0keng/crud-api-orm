@@ -59,9 +59,15 @@ const createCourse = async (course) => {
   });
 };
 
-const updateCourse = async (id, name, lecturer_id) => {
+const updateCourse = async (id, course) => {
   await db.Course.update(
-    { name, lecturer_id },
+    {
+      name: course.name,
+      subject: course.subject,
+      room: course.room,
+      description: course.description,
+      lecturer_id: course.lecturer_id,
+    },
     {
       where: {
         id,

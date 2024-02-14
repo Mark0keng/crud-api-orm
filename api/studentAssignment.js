@@ -58,12 +58,12 @@ const submitStudentAssignment = async (req, res) => {
     if (!fileResult?.url)
       return res.status(500).json({ message: fileSubmit.error });
 
-    await StudentAssignmentHelper.updateStudentAssignment({
+    const data = await StudentAssignmentHelper.updateStudentAssignment({
       ...req.body,
       fileSubmit: fileResult.url,
     });
 
-    return res.status(200).json({ message: "successfully created!" });
+    return res.status(200).json({ message: "successfully created!", data });
   } catch (error) {
     console.log(error);
     if (fileResult?.public_id) {

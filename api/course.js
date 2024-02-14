@@ -4,6 +4,7 @@ const GeneralHelper = require("../helpers/generalHelper");
 const Validation = require("../helpers/validationHelper");
 const CourseHelper = require("../helpers/courseHelper");
 const LecturerHelper = require("../helpers/lecturerHelper");
+const Middleware = require("../middlewares/authMiddleware");
 
 const getCourseByCode = async (req, res) => {
   try {
@@ -49,9 +50,7 @@ const createCourse = async (req, res) => {
 
 const updateCourse = async (req, res) => {
   try {
-    const courseExist = await CourseHelper.getCourseById(req.params.id);
-    if (courseExist.length === 0)
-      return res.status(404).json({ message: "Course not found!" });
+    await CourseHelper.getCourseById(req.params.id);
 
     Validation.courseValidation(req.body);
 
@@ -63,11 +62,7 @@ const updateCourse = async (req, res) => {
         return res.status(404).json({ message: "Lecturer not found!" });
     }
 
-    await CourseHelper.updateCourse(
-      req.params.id,
-      req.body.name,
-      req.body.lecturer_id
-    );
+    await CourseHelper.updateCourse(req.params.id, req.body);
 
     return res.status(200).json({ message: "Course successfully updated!" });
   } catch (error) {
